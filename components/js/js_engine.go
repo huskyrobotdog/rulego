@@ -63,7 +63,7 @@ type GojaJsEngine struct {
 }
 
 // NewGojaJsEngine Create a new instance of the JavaScript engine
-func NewGojaJsEngine(config types.Config, jsScript string, fromVars map[string]interface{}) (*GojaJsEngine, error) {
+func NewGojaJsEngine(config types.Config, jsScript string, fromVars map[string]interface{}, customVars ...func(vm *goja.Runtime)) (*GojaJsEngine, error) {
 	program, err := goja.Compile("", jsScript, true)
 	if err != nil {
 		return nil, err
@@ -77,7 +77,7 @@ func NewGojaJsEngine(config types.Config, jsScript string, fromVars map[string]i
 	}
 	jsEngine.vmPool = sync.Pool{
 		New: func() interface{} {
-			return jsEngine.NewVm(config, fromVars)
+			return jsEngine.NewVm(config, fromVars, customVars...)
 		},
 	}
 	return jsEngine, nil
@@ -113,7 +113,7 @@ func (g *GojaJsEngine) PreCompileJs(config types.Config) error {
 }
 
 // NewVm new a js VM
-func (g *GojaJsEngine) NewVm(config types.Config, fromVars map[string]interface{}) *goja.Runtime {
+func (g *GojaJsEngine) NewVm(config types.Config, fromVars map[string]interface{}, customVars ...func(vm *goja.Runtime)) *goja.Runtime {
 	vm := goja.New()
 	vars := make(map[string]interface{})
 	if fromVars != nil {
@@ -160,6 +160,10 @@ func (g *GojaJsEngine) NewVm(config types.Config, fromVars map[string]interface{
 		if err := vm.Set(k, v); err != nil {
 			config.Logger.Printf("set variable error,err:" + err.Error())
 		}
+	}
+
+	if len(customVars) > 0 {
+		customVars[0](vm)
 	}
 
 	state := g.setTimeout(vm)
