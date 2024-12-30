@@ -3,7 +3,7 @@ module github.com/rulego/rulego
 go 1.18
 
 require (
-	github.com/dop251/goja v0.0.0-20231024180952-594410467bc6
+	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/expr-lang/expr v1.16.9
 	github.com/go-sql-driver/mysql v1.8.1
@@ -18,7 +18,7 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/dlclark/regexp2 v1.7.0 // indirect
+	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/google/pprof v0.0.0-20230207041349-798e818bf904 // indirect
 	golang.org/x/net v0.24.0 // indirect
